@@ -1,0 +1,10 @@
+{
+  "name": "ticketshop",
+  "version": "1.0.0",
+  "description": "Het project voor de Ticketshop opdracht",
+  "main": "main.js",
+  "dependencies": {
+    "express": "^4.16.4",
+    "mysql2": "^2.1.0"
+  }
+}

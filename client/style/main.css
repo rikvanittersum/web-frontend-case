@@ -1,0 +1,134 @@
+body {
+    font-family: 'Tangerine', serif;
+    padding: 0px;
+    margin: 0px;
+
+    --primary-color: #007936;
+    --accent-color: #eee;
+    --light-text-color: rgb(107, 107, 107);
+}
+
+/* Describes the styling of the one and only element with id="mainheader", note the # in front of mainheader */
+#mainheader {
+    background-color: var(--primary-color);
+    font-size: 3rem;
+    color: white;
+}
+
+#logo-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#logo-header img {
+    margin-left: 30px;
+}
+
+main {
+    padding-left: 250px;
+    
+}
+
+nav
+{
+    height: 2rem;
+    line-height: 2rem;
+    background-color: var(--primary-color);
+    text-align: center;
+}
+
+/* Describes the styling of all elements with class="parkname", note the . in front of parkname */
+.parkname {
+    font-family: 'Tangerine', serif;
+    background-color: var(--primary-color);
+    border-radius: 25px;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.orderbutton{
+    background-color: var(--primary-color);
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 25px;
+}
+
+.orderbutton:hover{
+    background-color: black;
+}
+
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%
+  }
+
+
+.order {
+    padding-top: 25px;
+}
+
+.badge {
+    background-color: #007936;
+    display: inline;
+    color: white;
+    font-weight: bold;
+    width: 25px;
+    border-radius: 25px;
+}
+
+/* Describes the styling of all <article> elements */
+article {
+    margin-top: 300px; 
+    border: 1px solid var(--primary-color);
+    color: var(--light-text-color);
+    margin: 5px;
+    border-radius: 25px;
+    text-align: center;
+    box-shadow: 5px 5px grey;
+}
+
+.shoping-header {
+    overflow: hidden;
+    background-color: white;
+    position: fixed; /* Set the navbar to fixed position */
+    top: 0; /* Position the navbar at the top of the page */
+    width: 100%; /* Full width */
+  }
+
+a { 
+    color: white;
+}
+
+a:hover{
+    color:black
+}
+
+.column {
+    float: left;
+    width: 40%;
+    margin-top: 30px; 
+}
+.main{
+    margin-top: 3000px; 
+}
+
+/* Clear floats after the columns */
+.row:after {
+
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.row{
+    margin-top: 250px; 
+}
+

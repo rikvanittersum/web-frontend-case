@@ -1,0 +1,112 @@
+# relaties: 
+employee -> order | 1 to 1 (werknemer doet 1 order en order heeft 1 employee)
+order -> orderline | 1 to many (in 1 order kunnen meerdere orderlines zitten)
+order -> amusementpark | 1 to many (1 order heeft 1 amusementpark, maar amusement park kan voorkomen in meerdere orders)
+
+# keuze relational database
+In de database zal relatief veel worden geschreven(kaartjes kopen). Ook zijn de velden van de rows consistent: elk pretpark heeft een omschgrijving, 
+kaartjes etc. De database zal niet al te groot worden, dus verdere uitbreiding zal niet bijzonder noodzakelijk zijn. Ook wat moet worden opgeslagen lijkt 
+allemaal redelijk op elkaar. Ook moet de db gelocked worden zodra een bestelling wordt geplaatst, bij een nosql is dit niet strikt genoeg. ACID is erg belangrijk
+in dit geval, het hele proces moet 100% goed doorlopen worden.
+
+//creation of tables
+
+//fixed, kan nog meer info die uiteraard wel kan veranderen (adres, leeftijd etc)
+CREATE TABLE Employees (workersID int NOT NULL AUTO_INCREMENT, workEmail varchar(100) NOT NULL, name varchar(50), 
+privateEmail varchar(50), primary key (workersID));
+
+//dynamic
+CREATE TABLE Orders (OrderNR int NOT NULL AUTO_INCREMENT, workersID int, PRIMARY KEY (OrderNR), 
+FOREIGN KEY (workersID) REFERENCES Employees(workersID));
+
+//dynamic
+CREATE TABLE Orderlines (OrderNR int NOT NULL, ParkID int NOT NULL, adults int, kids int,
+FOREIGN KEY (OrderNR) REFERENCES Orders(OrderNR), FOREIGN KEY (ParkID) REFERENCES Parks(ParkID));
+
+//fixed instances, changing available, admin kan dit eventueel veranderen
+CREATE TABLE Parks (ParkID int NOT NULL AUTO_INCREMENT, parkname varchar(50), description varchar(250), adultPrice int, kidsPrice int,
+minimumNumberOfAdults int NOT NULL, minimumNumberOfKids int NOT NULL, discount int, available int, location varchar(50), primary key (ParkID));
+
+//inserts
+
+INSERT INTO Employees (workEmail, name, privateEmail) values('rvittersum@soyo.nl', 'rik van Ittersum', 'privatemail@gmail.com');
+
+INSERT INTO Orders (workersID) values (LAST_INSERT_ID());
+
+INSERT INTO Orderlines (OrderNR, ParkID, adults, kids) values (1,1,3,4);
+
+INSERT INTO Parks (parkname, description, adultPrice, kidsPrice, minimumNumberOfAdults, minimumNumberOfKids, discount, available, location) 
+values("land van ooit", "super mooi", 3, 4, 4, 5, 4, 100, "3, 4");
+
+// data voor parken index.html, users kunnen parken met beschikbare tickets zien.
+SELECT * FROM Parks Where available < 0;
+
+// user kan zien waar pretparken in de buurt zijn
+SELECT * FROM Parks Where lon < watjewil AND lan < watjewil;
+
+//tickets kopen
+
+checken of beschikbaar
+SELECT Parks.available FROM Parks WHERE name = parkname;
+
+als beschikbaar, moet nog nadenken over locken, alles moet goed gaan!! 
+INSERT INTO Orders (workersID) values (workersID);
+itereren over localstorage
+    UPDATE Parks SET available = 0 WHERE parkname = parkname;
+    parkID = SELECT Parks.ParkID FROM Parks WHERE name = parkname;
+    INSERT INTO Orderlines (OrderNR, ParkID) values (LAST_INSERT_ID(),parkid);
+
+// alle orders selecteren
+ordernrs = SELECT Orders.OrderNR FROM orders WHERE workersID=workersID;
+itereren over orders
+    SELECT * from orderlines WHERE orderNR = ordernr;
+
+// alle parken zien
+SELECT * from Parks;
+
+// admin updaten, toevoegen en selecteren
+INSERT INTO Parks (parkname, description, adultPrice, kidsPrice, minimumNumberOfAdults, minimumNumberOfKids, discount, available, location) 
+values (parkname, description, adultPrice, kidsPrice, minimumNumberOfAdults, minimumNumberOfKids, discount, available, "3, 4");
+UPDATE Parks SET parkname = 'joe' WHERE name = parkname;
+DELETE FROM Parks WHERE parkname = 'joe';
+
+// alle customers zien
+workIDs =  SELECT workersID from Employees;
+
+loopen over workIDs 
+    customers = SELECT workersID FROM Orders WHERE workersID=workID;
+
+
+// voor aanmaken database parken
+
+var con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "xxxx",
+    database : 'sogyoAdventure'
+  });
+
+parkarray = [];
+
+for (item in attractions){
+    parkarray.push(Object.values(attractions[item]));
+}
+
+
+
+for (list in parkarray){
+    parkarray[list][parkarray[list].length -1] = JSON.stringify(parkarray[list][parkarray[list].length -1])
+}
+
+
+con.connect(function(err) {
+    if (err) throw err;
+    console.log("Connected!");
+    
+    sql = "INSERT INTO Parks (parkname, description, adultPrice, kidsPrice, minimumNumberOfAdults, minimumNumberOfKids, discount, available, location) VALUES ?";
+    con.query(sql,[parkarray], function (err, result) {
+        if (err) throw err;
+        con.end();
+    });
+});
+
